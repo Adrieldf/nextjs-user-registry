@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/InputField";
-import Alert from "@/components/Alert";
 import DatePickerField from "@/components/DatePickerField";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { useAddUser } from "@/hooks/useAddUser";
 
 interface UserData {
   firstName: string;
@@ -18,7 +19,6 @@ interface UserData {
 }
 
 const RegisterPage = () => {
-  const router = useRouter();
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -27,68 +27,30 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
 
-  const mutation: UseMutationResult<unknown, Error, UserData, unknown> =
-    useMutation(
-      {
-        mutationFn: async ({
-          firstName,
-          lastName,
-          email,
-          mobileNumber,
-          username,
-          password,
-          birthDate,
-        }: UserData) => {
-          const response = await fetch("/api/users", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              firstName,
-              lastName,
-              email,
-              mobileNumber,
-              username,
-              password,
-              birthDate,
-            }),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Registration failed");
-          }
-
-          return response.json();
-        },
-        onSuccess: () => {
-          // Redirect to login page on successful registration
-          router.push("/login");
-        },
-        onError: (error: unknown) => {
-          // Error handling logic
-          console.error("Registration error:", error);
-        },
-      }
-    );
+  const { mutate: addUser, isPending } = useAddUser();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate({
-      firstName,
-      lastName,
-      email,
-      mobileNumber,
-      username,
-      password,
-      birthDate,
-    });
+    addUser(
+      {
+        firstName,
+        lastName,
+        email,
+        mobileNumber,
+        username,
+        password,
+        birthDate,
+      },
+      {
+        onSuccess: () => toast.success("User saved successfully!"),
+        onError: () => toast.error("Error while adding user, please try again later.")
+      }
+    );
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-slate-900 text-slate-100 min-h-screen p-4">
-      <div className="w-full max-w-screen-lg bg-slate-800 text-slate-100 p-8 rounded-lg shadow-md overflow-y-auto max-h-[90vh]">
+    <div className="flex h-min bg-slate-900 text-slate-100 min-h-screen p-4">
+      <div className="w-full max-w-screen-lg bg-slate-800 text-slate-100 p-8 rounded-lg shadow-md overflow-y-auto h-min">
         <h2 className="text-2xl font-bold mb-6">Register user</h2>
         {/* {error && <Alert message={error} type="error" />}
         {success && <Alert message={success} type="success" />} */}
@@ -144,11 +106,15 @@ const RegisterPage = () => {
           </div>
           <DatePickerField
             label="Birth Date"
-            selectedDate={birthDate}
+            value={birthDate}
             onChange={(date) => setBirthDate(date)}
           />
-          <button type="submit" className="w-full py-2 px-4 common-button">
-            Save
+          <button
+            type="submit"
+            className="w-full py-2 px-4 common-button"
+            disabled={isPending}
+          >
+            {isPending ? "Saving..." : "Save"}
           </button>
         </form>
       </div>

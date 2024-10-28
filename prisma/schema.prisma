@@ -16,7 +16,7 @@ model User {
   lastName String
   email String @unique
   mobileNumber String
-  dateOfBirth DateTime
+  dateOfBirth DateTime?
   username String
   password String
   createdAt DateTime @default(now())

@@ -27,15 +27,12 @@ export default function Dropdown({ buttonText, children }: DropdownProps) {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={handleToggle}
-        className="accent-button"
-      >
+      <button onClick={handleToggle} className="accent-button">
         {buttonText}
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 bg-white border rounded shadow-lg p-4 w-48 right-0 z-10">
+        <div className="absolute top-full mt-1 bg-slate-700 border rounded shadow-lg p-3 w-48 right-0 z-10 flex flex-col gap-2">
           {children}
         </div>
       )}

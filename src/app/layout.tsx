@@ -28,9 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const [pageTitle, setPageTitle] = useState("My App");
+  const isLoginPage = pathname === "/login";
+  const [pageTitle, setPageTitle] = useState("CE Tech Test");
   const [pageDescription, setPageDescription] = useState(
-    "A description of my app"
+    "Cyber Energia Technical Test"
   );
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function RootLayout({
         setPageTitle("Dashboard - My App");
         setPageDescription("View your dashboard and manage your settings");
         break;
-      case "/users":
+      case "/userList":
         setPageTitle("User List - My App");
         setPageDescription("Manage and view user information");
         break;
@@ -61,9 +62,9 @@ export default function RootLayout({
       >
         <QueryClientContextProvider>
           <div className="flex h-screen">
-            <Sidebar />
+            {!isLoginPage && <Sidebar />}
             <div className="flex-1 flex flex-col">
-              <Topbar />
+              {!isLoginPage && <Topbar />}
               <div className="overflow-y-auto h-full">
                 <ToastContainer />
                 {children}
