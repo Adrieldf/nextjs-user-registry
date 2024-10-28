@@ -6,7 +6,8 @@ const prisma = new PrismaClient();
 
 export async function POST() {
   try {
-    const saltRounds = 69;
+    console.log("started");
+    const saltRounds = 10;
     const hashedPassword = await bcrypt.hash("12345", saltRounds);
     const usersData = [
       {
@@ -37,8 +38,10 @@ export async function POST() {
         dateOfBirth: new Date("1990-01-03"),
       },
     ];
+    
+    console.log("before for");
     for (const user of usersData) {
-      await prisma.user.create({ data: {
+    const u =  await prisma.user.create({ data: {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -46,9 +49,11 @@ export async function POST() {
         username: user.username,
         password: user.password,
         dateOfBirth: user.dateOfBirth
-      } });
+      }});
+      console.log("user added", u);
     }
 
+    console.log("after for");
     return NextResponse.json({ message: "Users inserted" }, { status: 201 });
   } catch (error) {
     return NextResponse.json(

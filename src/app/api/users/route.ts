@@ -27,6 +27,11 @@ export async function GET(req: Request) {
         id: true,
         email: true,
         firstName: true,
+        lastName: true,
+        username: true,
+        dateOfBirth: true,
+        mobileNumber: true,
+        updatedAt: true,
         createdAt: true,
       },
     });
