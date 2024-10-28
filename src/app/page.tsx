@@ -13,6 +13,9 @@ export default function Home() {
       <Link className="common-button" href="/register">
         Register
       </Link>
+      <Link className="common-button" href="/dashboard">
+        Dashboard
+      </Link>
 
       <ul className="pl-4">
         {}

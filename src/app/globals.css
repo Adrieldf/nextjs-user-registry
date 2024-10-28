@@ -28,7 +28,17 @@ body {
 
 @layer components {
   .common-button {
-    @apply border border-slate-300 text-slate-300 px-2 py-1 rounded 
-    hover:bg-slate-700 focus-within:bg-slate-700 outline-none;
+    @apply border border-slate-300 text-slate-800 px-2 py-1 rounded bg-slate-300
+    hover:bg-slate-400 focus-within:bg-slate-400 outline-none;
+  }
+
+  .common-input {
+    @apply w-full px-3 py-2 border border-slate-300 text-slate-300 rounded
+    hover:bg-slate-700 focus-within:bg-slate-700 outline-none
+    bg-slate-800 autofill:bg-slate-800;
+  }
+
+  .common-text {
+    @apply text-slate-300;
   }
 }
