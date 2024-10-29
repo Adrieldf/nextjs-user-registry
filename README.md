@@ -28,7 +28,7 @@ Node.js and npm: Ensure that Node.js and npm are installed on your machine. You 
 
 - In the Dashboard there is a counter for how much users are registered in the database and have the status as active.
 - In the Users page, you can see a paginated list of the current users registered.
-- In the top bar you have a debug menu with 2 buttons to add or remove pre-defined users so you don't have to register every single one.
+- In the top bar you have a debug menu with 2 buttons to add or remove pre-defined users so you don't have to register every single one manually.
 
 ## Project Structure
 
