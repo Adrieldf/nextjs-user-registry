@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function DELETE() {
   try {
     const whereClause: Prisma.UserWhereInput = {};
-    whereClause.lastName = "Test";
+    whereClause.mobileNumber = "1234567890";
     const user = await prisma.user.deleteMany({
       where: whereClause,
     });

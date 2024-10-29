@@ -18,6 +18,7 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [isActive, setIsActive] = useState(true);
 
   const { status } = useSession();
   useEffect(() => {
@@ -30,7 +31,6 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
     queryKey: ["users"],
     queryFn: async () => {
       const response = await axios.get(`/api/users/${id}`);
-      console.log("user data", response.data);
       if (response) {
         setFirstName(response.data.firstName);
         setLastName(response.data.lastName);
@@ -38,6 +38,7 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
         setEmail(response.data.email);
         setUsername(response.data.username);
         setBirthDate(response.data.dateOfBirth);
+        setIsActive(response.data.isActive);
       }
       return response.data;
     },
@@ -62,6 +63,7 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
       mobileNumber,
       username,
       birthDate,
+      isActive,
     });
   };
 
@@ -119,6 +121,18 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
             value={birthDate}
             onChange={(date) => setBirthDate(date)}
           />
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <label className="flex items-center space-x-2 common-text">
+              <span>User is active?</span>
+              <input
+                type="checkbox"
+                name="active"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="form-checkbox h-5 w-5"
+              />
+            </label>{" "}
+          </div>
           <button type="submit" className="w-full py-2 px-4 common-button">
             {"Save"}
           </button>

@@ -33,6 +33,7 @@ export async function GET(req: Request) {
         mobileNumber: true,
         updatedAt: true,
         createdAt: true,
+        isActive: true,
       },
     });
 
@@ -55,7 +56,6 @@ export async function POST(req: Request) {
     password,
     birthDate,
   } = await req.json();
-  console.log("start post");
   if (!firstName || !lastName || !email || !username || !password) {
     return NextResponse.json(
       { error: "Required fields missing!" },
@@ -64,25 +64,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    
-  console.log("start try");
     const existingUser = await prisma.user.findFirst({ where: { email } });
-    
-  console.log("after findFirst");
     if (existingUser) {
-      
-  console.log("found existing user");
       return NextResponse.json(
         { error: "User with this email already exists" },
         { status: 400 }
       );
     }
 
-    console.log("pre password hash");
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    console.log("pass word hash post");
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: {
         firstName: firstName,
@@ -92,16 +82,15 @@ export async function POST(req: Request) {
         username: username,
         password: hashedPassword,
         dateOfBirth: birthDate,
+        isActive: true,
       },
     });
 
-    console.log("saved");
     return NextResponse.json(
       { message: "User registered successfully", user: newUser },
       { status: 201 }
     );
-  } catch (e){
-    console.log(e);
+  } catch {
     return NextResponse.json({ error: "Error creating user" }, { status: 500 });
   }
 }

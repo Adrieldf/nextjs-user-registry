@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { useAddUser } from "@/hooks/useAddUser";
 import { useSession } from "next-auth/react";
 import router from "next/router";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const RegisterPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -75,12 +77,24 @@ const RegisterPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <InputField
-              label="Mobile Number"
-              type="text"
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-            />
+            <div className="w-full">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium common-text mb-1"
+              >
+                Mobile Number
+              </label>
+              <PhoneInput
+                country={"us"} // Set default country code
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e)}
+                inputProps={{
+                  name: "phone",
+                  required: false,
+                  className: "w-full p-2 border rounded common-input pl-12",
+                }}
+              />
+            </div>
           </div>
 
           <div className="flex flex-col md:flex-row gap-4 mb-4">

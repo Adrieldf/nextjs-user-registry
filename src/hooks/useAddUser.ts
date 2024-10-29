@@ -14,9 +14,7 @@ interface AddUserParams {
 export function useAddUser() {
   return useMutation({
     mutationFn: async (userData: AddUserParams) => {
-      console.log("started mutation");
       const response = await axios.post("/api/users", userData);
-      console.log("after axios post");
       return response.data;
     },
   });

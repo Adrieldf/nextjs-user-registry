@@ -114,6 +114,12 @@ export default function UserListPage() {
           minute: "2-digit",
         }),
     },
+    {
+      headerName: "Active",
+      field: "isActive",
+      sortable: true,
+      filter: true,
+    },
   ];
 
   if (isLoading) return <p>Loading users...</p>;
@@ -134,7 +140,7 @@ export default function UserListPage() {
           </div>
           <AgGridReact
             columnDefs={columns}
-            rowData={users}
+            rowData={users ?? []}
             pagination={true}
             paginationPageSize={20}
           />
