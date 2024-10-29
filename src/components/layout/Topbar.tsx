@@ -38,8 +38,8 @@ export default function Topbar() {
 
   return (
     <div className="bg-slate-800 text-slate-100 p-4 flex justify-between align-center">
-      <h1 className="text-lg font-bold">CE Tech Test</h1>
-      <div className="flex ">
+      <h1 className="text-lg font-bold hidden md:flex w-full">CE Tech Test</h1>
+      <div className="flex justify-end w-full">
         <Dropdown buttonText="Debug">
           <button
             onClick={handleAddUser}
@@ -60,7 +60,7 @@ export default function Topbar() {
           <p></p>
         ) : session ? (
           <div className="flex items-center space-x-4">
-            <span className="ml-4 common-text whitespace-nowrap">
+            <span className="ml-4 common-text whitespace-nowrap hidden md:flex">
               Welcome {session?.user?.name}!
             </span>
             <button onClick={() => signOut()} className="accent-button">

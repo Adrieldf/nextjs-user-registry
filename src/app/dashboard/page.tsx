@@ -37,7 +37,7 @@ export default function DashboardPage() {
       <div className="w-full bg-slate-800 text-slate-100 p-8 rounded-lg shadow-md">
         <div className="p-4">
           <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-          <div className="flex space-x-6">
+          <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0">
             <div className="bg-slate-700 text-slate-100 p-4 rounded-lg shadow">
               <p className="text-lg font-semibold">Total Users</p>
               <p className="text-2xl font-bold">{data?.totalUsers ?? 0}</p>
