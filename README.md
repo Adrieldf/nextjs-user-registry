@@ -1,4 +1,4 @@
-# CE Technical Test README
+# CE Technical Test
 
 ## Prerequisites
 
@@ -21,6 +21,14 @@ Node.js and npm: Ensure that Node.js and npm are installed on your machine. You 
 
 - And open your browser using the following url:
 ```localhost:3000/```
+
+## Usage
+
+- To access any page with data you need to be logged in, if you don't have a account you can create a new one in the Sign Up button on the login page.
+
+- In the Dashboard there is a counter for how much users are registered in the database and have the status as active.
+- In the Users page, you can see a paginated list of the current users registered.
+- In the top bar you have a debug menu with 2 buttons to add or remove pre-defined users so you don't have to register every single one.
 
 ## Project Structure
 
