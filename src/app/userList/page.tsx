@@ -22,7 +22,7 @@ export default function UserListPage() {
     id: string;
     name: string;
   } | null>(null);
-  
+
   const { status } = useSession();
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -52,7 +52,7 @@ export default function UserListPage() {
     setSelectedUser(null);
   };
   const deleteUserMutation = useMutation({
-    mutationFn: (userId: string) => axios.delete(`api/users/${userId}`),
+    mutationFn: (userId: string) => axios.delete(`api/users/${userId}`)
   });
 
   const columns = [
@@ -89,6 +89,20 @@ export default function UserListPage() {
     {
       headerName: "Created At",
       field: "createdAt",
+      sortable: true,
+      filter: true,
+      valueFormatter: (params: { value: string | number | Date }) =>
+        new Date(params.value).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+    },
+    {
+      headerName: "Updated At",
+      field: "updatedAt",
       sortable: true,
       filter: true,
       valueFormatter: (params: { value: string | number | Date }) =>

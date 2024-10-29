@@ -1,11 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import InputField from "@/components/InputField";
 import DatePickerField from "@/components/DatePickerField";
+import { useSession } from "next-auth/react";
 
 export default function EditUserPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -16,31 +17,40 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
   const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
 
-  const { data, isLoading, isSuccess } = useQuery({
+  const { status } = useSession();
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  const { isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const response = await axios.get(`/api/users/${id}`);
+      console.log("user data", response.data);
       if (response) {
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-        setMobileNumber(data.mobileNumber);
-        setEmail(data.email);
-        setUsername(data.username);
-        setPassword(data.password);
-        setBirthDate(data.dateOfBirth);
+        setFirstName(response.data.firstName);
+        setLastName(response.data.lastName);
+        setMobileNumber(response.data.mobileNumber);
+        setEmail(response.data.email);
+        setUsername(response.data.username);
+        setBirthDate(response.data.dateOfBirth);
       }
       return response.data;
     },
   });
-  if (isSuccess) {
-  }
 
   const updateUserMutation = useMutation({
     mutationFn: (updatedData: any) =>
       axios.put(`/api/users/${id}`, updatedData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] }); // Refetch user data after update
+      toast.success("User updated successfully");
+      router.push("/userList");
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -51,14 +61,8 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
       email,
       mobileNumber,
       username,
-      password,
       birthDate,
     });
-    if (updateUserMutation.isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["users"] }); // Refetch user data after update
-      toast.success("User updated successfully");
-      router.push("/userList");
-    }
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -67,8 +71,6 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
     <div className="flex h-min bg-slate-900 text-slate-100 min-h-screen p-4">
       <div className="w-full max-w-screen-lg bg-slate-800 text-slate-100 p-8 rounded-lg shadow-md overflow-y-auto h-min">
         <h2 className="text-2xl font-bold mb-6">Edit user</h2>
-        {/* {error && <Alert message={error} type="error" />}
-      {success && <Alert message={success} type="success" />} */}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row gap-4 mb-4 w-full">
             <InputField
@@ -109,13 +111,6 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            <InputField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>

@@ -5,7 +5,8 @@ import InputField from "@/components/InputField";
 import DatePickerField from "@/components/DatePickerField";
 import { toast } from "react-toastify";
 import { useAddUser } from "@/hooks/useAddUser";
-
+import { useSession } from "next-auth/react";
+import router from "next/router";
 
 const RegisterPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,7 +18,7 @@ const RegisterPage = () => {
   const [birthDate, setBirthDate] = useState<Date | null>(null);
 
   const { mutate: addUser, isPending } = useAddUser();
-
+  const { status } = useSession();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addUser(
@@ -31,8 +32,15 @@ const RegisterPage = () => {
         birthDate,
       },
       {
-        onSuccess: () => toast.success("User saved successfully!"),
-        onError: () => toast.error("Error while adding user, please try again later.")
+        onSuccess: () => {
+          toast.success("User saved successfully!");
+          // Redirect to login after first registration
+          if (status === "unauthenticated") {
+            router.push("/login");
+          }
+        },
+        onError: () =>
+          toast.error("Error while adding user, please try again later."),
       }
     );
   };
@@ -41,8 +49,6 @@ const RegisterPage = () => {
     <div className="flex h-min bg-slate-900 text-slate-100 min-h-screen p-4">
       <div className="w-full max-w-screen-lg bg-slate-800 text-slate-100 p-8 rounded-lg shadow-md overflow-y-auto h-min">
         <h2 className="text-2xl font-bold mb-6">Register user</h2>
-        {/* {error && <Alert message={error} type="error" />}
-        {success && <Alert message={success} type="success" />} */}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row gap-4 mb-4 w-full">
             <InputField

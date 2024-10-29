@@ -11,22 +11,22 @@ const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { email, password } = credentials ?? {};
+        const { username, password } = credentials ?? {};
 
-        if (!email || !password) {
+        if (!username || !password) {
           throw new Error("Email and password are required");
         }
 
         const user = await prisma.user.findFirst({
-          where: { email },
+          where: { username },
         });
 
         if (!user) {
-          throw new Error("No user found with this email");
+          throw new Error("No user found with this username");
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);

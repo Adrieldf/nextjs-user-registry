@@ -3,6 +3,30 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const userId = params.id;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user, { status: 200 });
+  } catch {
+    return NextResponse.json(
+      { error: "Failed to retrieve user" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
@@ -20,7 +44,6 @@ export async function PUT(
         email: data.email,
         mobileNumber: data.mobileNumber,
         username: data.username,
-        password: data.password,
         dateOfBirth: data.dateOfBirth,
         isActive: data.isActive,
       },
