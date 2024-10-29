@@ -6,11 +6,12 @@ import DatePickerField from "@/components/DatePickerField";
 import { toast } from "react-toastify";
 import { useAddUser } from "@/hooks/useAddUser";
 import { useSession } from "next-auth/react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -19,7 +20,6 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
-  const { mutate: addUser, isPending } = useAddUser();
   const { status } = useSession();
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [passwordValidations, setPasswordValidations] = useState({
@@ -29,6 +29,23 @@ const RegisterPage = () => {
     number: false,
     specialChar: false,
   });
+  const redirectOrClearInputs = () => {
+    toast.success("User saved successfully!");
+    // Redirect to login after first registration
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else {
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setMobileNumber("");
+      setUsername("");
+      setPassword("");
+      setConfirmPassword("");
+      setBirthDate(null);
+    }
+  };
+  const { mutate: addUser, isPending } = useAddUser(redirectOrClearInputs);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
@@ -53,37 +70,16 @@ const RegisterPage = () => {
       );
       return;
     }
-    addUser(
-      {
-        firstName,
-        lastName,
-        email,
-        mobileNumber,
-        username,
-        password,
-        birthDate,
-      },
-      {
-        onSuccess: () => {
-          toast.success("User saved successfully!");
-          // Redirect to login after first registration
-          if (status === "unauthenticated") {
-            router.push("/login");
-          }else{
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setMobileNumber('');
-            setUsername('');
-            setPassword('');
-            setConfirmPassword('')
-            setBirthDate(null);
-          }
-        },
-        onError: () =>
-          toast.error("Error while adding user, please try again later."),
-      }
-    );
+
+    addUser({
+      firstName,
+      lastName,
+      email,
+      mobileNumber,
+      username,
+      password,
+      birthDate,
+    });
   };
 
   return (
