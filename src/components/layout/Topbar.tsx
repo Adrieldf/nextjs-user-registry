@@ -5,11 +5,21 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAddUsers } from "@/hooks/debug/useAddUsers";
 import { useRemoveUsers } from "@/hooks/debug/useRemoveUsers";
 import Dropdown from "../Dropdown";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function Topbar() {
   const queryClient = useQueryClient();
   const addUserMutation = useAddUsers();
   const removeUserMutation = useRemoveUsers();
+  const { status } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+    //  router.push('/login');
+    }
+  }, [status, router]);
 
   const handleAddUser = () => {
     addUserMutation.mutate(undefined, {

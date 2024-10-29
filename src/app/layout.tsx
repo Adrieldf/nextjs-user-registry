@@ -10,6 +10,7 @@ import Sidebar from "../components/layout/Sidebar";
 import Topbar from "../components/layout/Topbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,16 +38,16 @@ export default function RootLayout({
   useEffect(() => {
     switch (pathname) {
       case "/dashboard":
-        setPageTitle("Dashboard - My App");
-        setPageDescription("View your dashboard and manage your settings");
+        setPageTitle("Dashboard");
+        setPageDescription("View your dashboard");
         break;
       case "/userList":
-        setPageTitle("User List - My App");
+        setPageTitle("User List");
         setPageDescription("Manage and view user information");
         break;
       default:
-        setPageTitle("My App");
-        setPageDescription("A description of my app");
+        setPageTitle("CE Tech Test");
+        setPageDescription("CE Tech Test");
     }
   }, [pathname]);
 
@@ -61,16 +62,18 @@ export default function RootLayout({
           bg-slate-800 text-slate-100 mx-auto`}
       >
         <QueryClientContextProvider>
-          <div className="flex h-screen">
-            {!isLoginPage && <Sidebar />}
-            <div className="flex-1 flex flex-col">
-              {!isLoginPage && <Topbar />}
-              <div className="overflow-y-auto h-full">
-                <ToastContainer />
-                {children}
+          <SessionProvider>
+            <div className="flex h-screen">
+              {!isLoginPage && <Sidebar />}
+              <div className="flex-1 flex flex-col">
+                {!isLoginPage && <Topbar />}
+                <div className="overflow-y-auto h-full">
+                  <ToastContainer />
+                  {children}
+                </div>
               </div>
             </div>
-          </div>
+          </SessionProvider>
         </QueryClientContextProvider>
       </body>
     </html>

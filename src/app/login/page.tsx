@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,10 +34,7 @@ export default function LoginPage() {
         backgroundImage: "url(/images/bg-nature-landscape.jpg)",
       }}
     >
-      {/* Optional overlay for better contrast */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
-
-      {/* Login form */}
       <div className="relative w-full max-w-md bg-slate-800 text-slate-100 p-8 rounded-lg shadow-md z-10">
         <h2 className="text-2xl font-bold mb-6 text-center">Welcome!</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -80,6 +78,15 @@ export default function LoginPage() {
             Login
           </button>
         </form>
+        <div className="flex flex-row justify-center align-middle pt-1">
+          <span>Don&apos;t have a account?</span>
+          <Link
+            href="/register"
+            className={`flex items-center hover:bg-gray-700`}
+          >
+            <span className="ml-4">Sign up</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
