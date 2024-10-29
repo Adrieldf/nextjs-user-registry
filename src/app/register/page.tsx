@@ -17,12 +17,42 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
-
   const { mutate: addUser, isPending } = useAddUser();
   const { status } = useSession();
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [passwordValidations, setPasswordValidations] = useState({
+    minLength: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordValidations({
+      minLength: newPassword.length >= 8,
+      uppercase: /[A-Z]/.test(newPassword),
+      lowercase: /[a-z]/.test(newPassword),
+      number: /\d/.test(newPassword),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(newPassword),
+    });
+  };
+
+  const allValid = Object.values(passwordValidations).every(Boolean);
+  const passwordsMatch = password === confirmPassword;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!allValid || !passwordsMatch) {
+      toast.error(
+        "Please make sure all password requirements are met and the passwords match."
+      );
+      return;
+    }
     addUser(
       {
         firstName,
@@ -39,6 +69,15 @@ const RegisterPage = () => {
           // Redirect to login after first registration
           if (status === "unauthenticated") {
             router.push("/login");
+          }else{
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setMobileNumber('');
+            setUsername('');
+            setPassword('');
+            setConfirmPassword('')
+            setBirthDate(null);
           }
         },
         onError: () =>
@@ -105,13 +144,80 @@ const RegisterPage = () => {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 mb-4 relative">
             <InputField
               label="Password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
               required
             />
+            {isPasswordFocused && (
+              <div className="absolute bottom-full mt-2 p-3 bg-slate-500 border rounded shadow-md w-50 z-11">
+                <p
+                  className={
+                    passwordValidations.minLength
+                      ? "text-slate-300"
+                      : "text-slate-700"
+                  }
+                >
+                  • Minimum 8 characters
+                </p>
+                <p
+                  className={
+                    passwordValidations.uppercase
+                      ? "text-slate-300"
+                      : "text-slate-700"
+                  }
+                >
+                  • At least one uppercase letter
+                </p>
+                <p
+                  className={
+                    passwordValidations.lowercase
+                      ? "text-slate-300"
+                      : "text-slate-700"
+                  }
+                >
+                  • At least one lowercase letter
+                </p>
+                <p
+                  className={
+                    passwordValidations.number
+                      ? "text-slate-300"
+                      : "text-slate-700"
+                  }
+                >
+                  • At least one number
+                </p>
+                <p
+                  className={
+                    passwordValidations.specialChar
+                      ? "text-slate-300"
+                      : "text-slate-700"
+                  }
+                >
+                  • At least one special character (e.g., !@#$%^&*)
+                </p>
+              </div>
+            )}
+            <InputField
+              label="Confirm password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            {confirmPassword && !passwordsMatch && (
+              <div className="absolute bottom-full mt-2 p-3 bg-slate-500 border rounded shadow-md w-50 z-10">
+                <p className="text-slate-300 text-sm mt-1">
+                  Passwords do not match.
+                </p>
+              </div>
+            )}
           </div>
           <DatePickerField
             label="Birth Date"

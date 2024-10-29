@@ -6,6 +6,8 @@ interface InputFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -14,6 +16,8 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   onChange,
   required = false,
+  onFocus,
+  onBlur,
 }) => {
   return (
     <div className="mb-4 w-full">
@@ -26,6 +30,8 @@ const InputField: React.FC<InputFieldProps> = ({
         onChange={onChange}
         required={required}
         className="common-input"
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </div>
   );
