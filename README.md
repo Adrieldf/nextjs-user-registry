@@ -8,16 +8,16 @@ Node.js and npm: Ensure that Node.js and npm are installed on your machine. You 
 
 - Clone this repository to a folder of your liking and enter it
 - Open a Terminal in that folder and install all the dependencies with the following command:
-- - npm install
+```npm install```
 
 - To set up the Prisma database run the following command:
-- - npx prisma migrate dev --name init
+```npx prisma migrate dev --name init```
 - - (This command will create the necessary tables in the database following the schema)
 - Run the following command as well to generate the Prisma client
-- - npx prisma generate
+```npx prisma generate```
 
 - Finally to run the project just use:
-- - npm run dev
+```npm run dev```
 
 ## Project Structure
 
