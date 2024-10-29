@@ -19,6 +19,9 @@ Node.js and npm: Ensure that Node.js and npm are installed on your machine. You 
 - Finally to run the project just use:
 ```npm run dev```
 
+- And open your browser using the following url:
+```localhost:3000/```
+
 ## Project Structure
 
 - /app: Contains the Next.js App Router pages, including the user list, registration form, and API routes.
