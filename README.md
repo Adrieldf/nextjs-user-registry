@@ -12,7 +12,7 @@ Node.js and npm: Ensure that Node.js and npm are installed on your machine. You 
 
 - To set up the Prisma database run the following command:
 ```npx prisma migrate dev --name init```
-- - (This command will create the necessary tables in the database following the schema)
+(This command will create the necessary tables in the database following the schema)
 - Run the following command as well to generate the Prisma client
 ```npx prisma generate```
 
