@@ -11,7 +11,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`bg-slate-700 text-slate-100 transition-all duration-300 flex flex-col 
+      className={`bg-slate-800 text-slate-100 transition-all duration-300 flex flex-col 
       ${ isSidebarOpen ? "w-64" : "w-16" } w-min`}
     >
       <button

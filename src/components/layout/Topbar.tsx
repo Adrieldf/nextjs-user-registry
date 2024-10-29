@@ -5,21 +5,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAddUsers } from "@/hooks/debug/useAddUsers";
 import { useRemoveUsers } from "@/hooks/debug/useRemoveUsers";
 import Dropdown from "../Dropdown";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Topbar() {
   const queryClient = useQueryClient();
   const addUserMutation = useAddUsers();
   const removeUserMutation = useRemoveUsers();
-  const { status } = useSession();
-  const router = useRouter();
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-    //  router.push('/login');
-    }
-  }, [status, router]);
+  const { data: session, status } = useSession();
 
   const handleAddUser = () => {
     addUserMutation.mutate(undefined, {
@@ -44,9 +37,9 @@ export default function Topbar() {
   };
 
   return (
-    <div className="bg-slate-700 text-slate-100 p-4 flex justify-between align-center">
+    <div className="bg-slate-800 text-slate-100 p-4 flex justify-between align-center">
       <h1 className="text-lg font-bold">CE Tech Test</h1>
-      <div>
+      <div className="flex ">
         <Dropdown buttonText="Debug">
           <button
             onClick={handleAddUser}
@@ -63,6 +56,22 @@ export default function Topbar() {
             {removeUserMutation.isPending ? "Removing..." : "Remove Users"}
           </button>
         </Dropdown>
+        {status === "loading" ? (
+          <p></p>
+        ) : session ? (
+          <div className="flex items-center space-x-4">
+            <span className="ml-4 common-text whitespace-nowrap">
+              Welcome {session?.user?.name}!
+            </span>
+            <button onClick={() => signOut()} className="accent-button">
+              Logout
+            </button>
+          </div>
+        ) : (
+          <Link href="/login" className="ml-4 accent-button">
+            <span>Login</span>
+          </Link>
+        )}
       </div>
     </div>
   );
