@@ -1,4 +1,4 @@
-# CE Technical Test
+# NextJS User Registry
 
 ## Prerequisites
 
